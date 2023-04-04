@@ -8,20 +8,28 @@ import axios from "axios";
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchMoviesHandler = async () => {
     setIsLoading(true);
+    setError(null);
 
-    const response = await axios.get("https://swapi.py4e.com/api/films/");
-    const transformedMovies = response.data.results.map((x) => ({
-      id: x.episode_id,
-      title: x.title,
-      releaseDate: x.release_date,
-      openingText: x.opening_crawl,
-    }));
+    try {
+      const response = await axios.get("https://swapi.py4e.com/api/films/");
+      const transformedMovies = response.data.results.map((x) => ({
+        id: x.episode_id,
+        title: x.title,
+        releaseDate: x.release_date,
+        openingText: x.opening_crawl,
+      }));
 
-    setMovies(transformedMovies);
-    setIsLoading(false);
+      setMovies(transformedMovies);
+    } catch (err) {
+      console.log("err:", err);
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,8 +39,11 @@ function App() {
       </section>
       <section>
         {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
-        {!isLoading && movies.length === 0 && <p>No movies were found.</p>}
+        {!isLoading && movies.length === 0 && !error && (
+          <p>No movies were found.</p>
+        )}
         {isLoading && <p>Loading...</p>}
+        {error && <p>An error has occurred.</p>}
       </section>
     </React.Fragment>
   );
