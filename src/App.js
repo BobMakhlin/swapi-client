@@ -21,13 +21,15 @@ function App() {
 
     try {
       const response = await axios.get(URL);
-      const transformedMovies = Object.entries(response.data).map(
-        ([id, movie]) => ({
-          id,
-          ...movie,
-        })
-      );
-      setMovies(transformedMovies);
+      if (response.data) {
+        const transformedMovies = Object.entries(response.data).map(
+          ([id, movie]) => ({
+            id,
+            ...movie,
+          })
+        );
+        setMovies(transformedMovies);
+      }
     } catch (err) {
       console.log("err:", err);
       setError(err);
