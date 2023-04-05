@@ -41,7 +41,7 @@ function App() {
   }, [fetchMoviesHandler]);
 
   const addMovieHandler = useCallback((movie) => {
-    console.log("addMovieHandler, movie:", movie);
+    axios.post(URL, movie);
   }, []);
 
   return (
