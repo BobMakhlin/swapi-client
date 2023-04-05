@@ -5,6 +5,7 @@ import "./App.css";
 import { useState } from "react";
 import axios from "axios";
 import { useCallback } from "react";
+import AddMovie from "./components/AddMovie";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -36,9 +37,16 @@ function App() {
   useEffect(() => {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
-  
+
+  const addMovieHandler = useCallback((movie) => {
+    console.log("addMovieHandler, movie:", movie);
+  }, []);
+
   return (
     <React.Fragment>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
