@@ -7,6 +7,9 @@ import axios from "axios";
 import { useCallback } from "react";
 import AddMovie from "./components/AddMovie";
 
+const URL =
+  "https://react-http-c16bc-default-rtdb.europe-west1.firebasedatabase.app/movies.json";
+
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,14 +20,13 @@ function App() {
     setError(null);
 
     try {
-      const response = await axios.get("https://swapi.py4e.com/api/films/");
-      const transformedMovies = response.data.results.map((x) => ({
-        id: x.episode_id,
-        title: x.title,
-        releaseDate: x.release_date,
-        openingText: x.opening_crawl,
-      }));
-
+      const response = await axios.get(URL);
+      const transformedMovies = Object.entries(response.data).map(
+        ([id, movie]) => ({
+          id,
+          ...movie,
+        })
+      );
       setMovies(transformedMovies);
     } catch (err) {
       console.log("err:", err);
