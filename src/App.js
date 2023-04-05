@@ -14,6 +14,7 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isReloadRequired, setIsReloadRequired] = useState(false);
 
   const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
@@ -35,15 +36,17 @@ function App() {
       setError(err);
     } finally {
       setIsLoading(false);
+      setIsReloadRequired(false);
     }
   }, []);
 
   useEffect(() => {
     fetchMoviesHandler();
-  }, [fetchMoviesHandler]);
+  }, [fetchMoviesHandler, isReloadRequired]);
 
-  const addMovieHandler = useCallback((movie) => {
-    axios.post(URL, movie);
+  const addMovieHandler = useCallback(async (movie) => {
+    await axios.post(URL, movie);
+    setIsReloadRequired(true);
   }, []);
 
   return (
